@@ -1,0 +1,4 @@
+t.MaxFPS 30
+r.VisualizeOccludedPrimitives 1
+
+GEditor->RedrawLevelEditingViewports(true);

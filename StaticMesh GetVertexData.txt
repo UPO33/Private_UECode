@@ -1,0 +1,15 @@
+if (_Mesh && _Mesh->StaticMesh)
+{
+	UStaticMesh* mesh = _Mesh->StaticMesh;
+	FPositionVertexBuffer& vertexBuffer = mesh->RenderData->LODResources[0].PositionVertexBuffer;
+	FColorVertexBuffer& colorVertexBuffer = mesh->RenderData->LODResources[0].ColorVertexBuffer;
+	uint32 numVertices = vertexBuffer.GetNumVertices();
+	for (size_t i = 0; i < numVertices; i++)
+	{
+		FColor color = colorVertexBuffer.GetNumVertices() > i ? colorVertexBuffer.VertexColor(i) : FColor::Red;
+		FVector vPos = RootComponent->GetComponentTransform().TransformPosition(vertexBuffer.VertexPosition(i));
+		DrawDebugPoint(world, vPos, 10, color);
+	}
+
+	
+}
