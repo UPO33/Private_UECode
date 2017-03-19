@@ -2,3 +2,7 @@ t.MaxFPS 30
 r.VisualizeOccludedPrimitives 1
 
 GEditor->RedrawLevelEditingViewports(true);
+
+You should also avoid using #if/#ifdef (except for WITH_EDITOR and WITH_EDITORONLY_DATA) around any annotated 
+properties or functions, since the generated code references them and will cause
+compile errors in any configuration where the define isn’t true.

@@ -32,3 +32,31 @@ returns linear wave between 0;1 base of calculated fallof
 	else
 		return  1.0f - abs(lerp(-1.0, 1.0, (_Value - _Radius) / _Fallof));
 }
+/*
+	Edge Detection Vertical && Horizontal
+	
+	@param _UV current pixel uv to smaple from
+	@param _PixelSize 
+	
+*/
+{
+	//13 == CustomDepth, 24 == CustonStenciel, 27 == CustomGBuffer
+	int sceneTextureID = 24;
+
+	float3 sampleRowUp = float3(SceneTextureLookup(_UV + float2(-1,-1) * _PixelSize, sceneTextureID, false).r
+			,SceneTextureLookup(_UV + float2(0,-1) * _PixelSize, sceneTextureID, false).r
+			,SceneTextureLookup(_UV + float2(1,-1) * _PixelSize, sceneTextureID, false).r);
+			
+	float3 sampleRowDown = float3(SceneTextureLookup(_UV + float2(-1,1) * _PixelSize, sceneTextureID, false).r
+			,SceneTextureLookup(_UV + float2(0,1) * _PixelSize, sceneTextureID, false).r
+			,SceneTextureLookup(_UV + float2(1,1) * _PixelSize, sceneTextureID, false).r);
+			
+	float3 sampleColumnRight = float3(sampleRowUp.z, SceneTextureLookup(_UV + float2(1,0) * _PixelSize, sceneTextureID, false).r, sampleRowDown.z);
+
+	float3 sampleColumnLeft = float3(sampleRowUp.x, SceneTextureLookup(_UV + float2(-1,0) * _PixelSize, sceneTextureID, false).r, sampleRowDown.x);
+
+	float hr = dot(sampleRowUp, float3(-1, -2, -1)) + dot(sampleRowDown, float3(1, 2, 1));
+	float vr = dot(sampleColumnLeft, float3(-1, -2, -1)) + dot(sampleColumnRight, float3(1, 2, 1));
+
+	return length(float2(hr, vr));
+}
